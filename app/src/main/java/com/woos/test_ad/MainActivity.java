@@ -4,12 +4,20 @@ import androidx.annotation.UiThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+
+import android.content.Context;
+import android.graphics.Point;
+import android.graphics.PointF;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.geometry.LatLngBounds;
+import com.naver.maps.geometry.Utmk;
 import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.MapFragment;
@@ -24,9 +32,10 @@ import java.sql.Array;
 import java.util.Arrays;
 
 
-public class MainActivity extends AppCompatActivity implements  OnMapReadyCallback{
+public class MainActivity extends AppCompatActivity implements  OnMapReadyCallback {
     boolean a=true;
 
+    NaverMap naverMap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,9 +51,9 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
     }
 
 
+
+
     public void onMapReady(@NonNull final NaverMap naverMap) {
-
-
 
         naverMap.setMapType(NaverMap.MapType.Hybrid);//맵타입 변경
 
@@ -62,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
                 return "군산대";
             }
         });
+
         final InfoWindow kunS = new InfoWindow();
         kunS.setAdapter(new InfoWindow.DefaultTextAdapter(this) {
             @NonNull
@@ -84,6 +94,18 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
             @Override
             public CharSequence getText(@NonNull InfoWindow infoWindow) {
                 return "원광대";
+            }
+        });
+
+        final InfoWindow Lal = new InfoWindow();
+        Lal.setAdapter(new InfoWindow.DefaultTextAdapter(this) {
+            @NonNull
+            @Override
+            public CharSequence getText(@NonNull InfoWindow infoWindow) {
+
+                String point =Lal.getPosition().latitude+" , "+Lal.getPosition().longitude ;
+
+                return point;
             }
         });
 
@@ -148,8 +170,18 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
                     a=true;
                 }
 
+                naverMap.setOnMapLongClickListener((point, crood)->{
+                    LatLng la = crood;
+                    Lal.setPosition(la);
+                    Lal.open(naverMap);
+                });
+
+
             }
         });
-
     }
+
+
+
+
 }
