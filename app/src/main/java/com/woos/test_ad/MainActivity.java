@@ -12,7 +12,10 @@ import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.naver.maps.geometry.LatLng;
@@ -53,9 +56,27 @@ public class MainActivity extends AppCompatActivity implements  OnMapReadyCallba
 
 
 
+    @Override
     public void onMapReady(@NonNull final NaverMap naverMap) {
 
-        naverMap.setMapType(NaverMap.MapType.Hybrid);//맵타입 변경
+        //////스피너 생성
+        Spinner maptypr_spinner = (Spinner)findViewById(R.id.map_type);
+       ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.mapType,R.layout.support_simple_spinner_dropdown_item);
+        maptypr_spinner.setAdapter(adapter);
+        //////스피너 설정에따른 맵타입 변경
+        maptypr_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position==0) naverMap.setMapType(NaverMap.MapType.Basic);
+                else if(position==1) naverMap.setMapType(NaverMap.MapType.Navi);
+                else if(position==2) naverMap.setMapType(NaverMap.MapType.Satellite);
+                else if(position==3) naverMap.setMapType(NaverMap.MapType.Hybrid);
+                else if(position==4) naverMap.setMapType(NaverMap.MapType.Terrain);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
         //마커생성
         final Marker ksU_M = new Marker();
